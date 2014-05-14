@@ -70,7 +70,7 @@ avalon.fn = avalon.prototype = avalon.init.prototype
 var el = avalon('id'); //直接返回实例
 </code></pre>
 
-<h2>getType类型判断</h2>
+<h2>avalon.type类型判断</h2>
 
 <pre><code>function getType(obj) { //取得类型
     if (obj == null) {
@@ -111,7 +111,7 @@ avalon.type = getType
 
 <p>当传入参数typeof 为 "function"时，根据其toString返回的字符串，从<code>class2type</code>中匹配对应的类型</p>
 
-<h2>isWindow的实现</h2>
+<h2>avalon.isWindow的实现</h2>
 
 <pre><code>avalon.isWindow = function(obj) {
     if (!obj)
@@ -130,12 +130,12 @@ if (isWindow(window)) {
 }
 </code></pre>
 
-<p>在ie678下使用以下代码判断</p>
+<p><strong>在ie678</strong>下使用以下代码判断</p>
 
 <pre><code>obj == obj.document &amp;&amp; obj.document != obj
 </code></pre>
 
-<p>在不同浏览器中<code>Object.prototype.toString(window)</code>返回的值不一致，所以使用了正则判断<code>/^\[object (Window|DOMWindow|global)\]$/</code></p>
+<p>因为在不同浏览器中<code>Object.prototype.toString(window)</code>返回的值不一致，所以使用了正则判断<code>/^\[object (Window|DOMWindow|global)\]$/</code></p>
 
 <pre><code>[object Window]firefox 
 [object Window]opera
@@ -143,12 +143,12 @@ if (isWindow(window)) {
 [object global]chrome
 </code></pre>
 
-<p>但在jquery中使用的是，以下这种方式</p>
+<p>而在jquery中使用的是，以下这种方式</p>
 
-<pre><code>obj != null &amp;&amp; obj == obj.window;
+<pre><code>obj != null &amp;&amp; obj === obj.window;
 </code></pre>
 
-<p>此方式在以下代码时会失效（防君子不防小人）</p>
+<p>但此方式在以下代码时会失效（防君子不防小人）</p>
 
 <pre><code>var obj = {};
 obj.window = obj;
@@ -156,7 +156,7 @@ obj.window = obj;
 
 <p>但是这样定义对象的人毕竟少之又少，估计jquery应该是为了性能做出了让步（正则在浏览器下效率低下），使用了最简单的<code>obj != null &amp;&amp; obj == obj.window;</code>，大家可以根据自身要求来使用不同的方案</p>
 
-<h2>isPlainObject的实现</h2>
+<h2>avalon.isPlainObject的实现</h2>
 
 <pre><code>//判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例。
 avalon.isPlainObject = function(obj) {
@@ -179,6 +179,228 @@ if (rnative.test(Object.getPrototypeOf)) {
     }
 }
 </code></pre>
+
+<ul>
+<li><code>ohasOwn.call(obj.constructor.prototype, "isPrototypeOf")</code>对象原型中存在<code>isPrototypeOf</code>属性则代表是朴素的Object对象</li>
+<li>ECMA V5为Object添加了静态的<code>getPrototypeOf</code>方法，因此使用正则<code>/\[native code\]/</code>判断<code>Object.getPrototypeOf</code>为Object的静态原生函数时，可使用<code>!!obj &amp;&amp; typeof obj === "object" &amp;&amp; Object.getPrototypeOf(obj) === oproto</code>判断是否朴素的Object对象</li>
+</ul>
+
+
+<h2>avalon.mix 对象属性拷贝</h2>
+
+<pre><code>avalon.mix = avalon.fn.mix = function() {
+    var options, name, src, copy, copyIsArray, clone,
+            target = arguments[0] || {},
+            i = 1,
+            length = arguments.length,
+            deep = false
+
+    // 如果第一个参数为布尔,判定是否深拷贝
+    if (typeof target === "boolean") {
+        deep = target
+        target = arguments[1] || {}
+        i++
+    }
+
+    //确保接受方为一个复杂的数据类型
+    if (typeof target !== "object" &amp;&amp; getType(target) !== "function") {
+        target = {}
+    }
+
+    //如果只有一个参数，那么新成员添加于mix所在的对象上
+    if (i === length) {
+        target = this
+        i--
+    }
+
+    for (; i &lt; length; i++) {
+        //只处理非空参数
+        if ((options = arguments[i]) != null) {
+            for (name in options) {
+                src = target[name]
+                copy = options[name]
+
+                // 防止环引用
+                if (target === copy) {
+                    continue
+                }
+                if (deep &amp;&amp; copy &amp;&amp; (avalon.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
+
+                    if (copyIsArray) {
+                        copyIsArray = false
+                        clone = src &amp;&amp; Array.isArray(src) ? src : []
+
+                    } else {
+                        clone = src &amp;&amp; avalon.isPlainObject(src) ? src : {}
+                    }
+
+                    target[name] = avalon.mix(deep, clone, copy)
+                } else if (copy !== void 0) {
+                    target[name] = copy
+                }
+            }
+        }
+    }
+    return target
+}
+</code></pre>
+
+<p>与jquery的extend用法一样</p>
+
+<h2>avalon.oneObject方法</h2>
+
+<pre><code>function oneObject(array, val) {
+    if (typeof array === "string") {
+        array = array.match(rword) || []
+    }
+    var result = {},
+        value = val !== void 0 ? val : 1
+    for (var i = 0, n = array.length; i &lt; n; i++) {
+        result[array[i]] = value
+    }
+    return result
+}
+</code></pre>
+
+<p>根据传入数组，生成value为参数val的json对象，能接受传入逗号或空格分割的字符串</p>
+
+<pre><code>oneObject(['a', 'b', 'c'], 1)
+oneObject('a,b,c', 1)
+oneObject('a b c', 1)
+</code></pre>
+
+<h2>avalon.range方法</h2>
+
+<pre><code>range: function(start, end, step) { // 用于生成整数数组
+        step || (step = 1)
+        if (end == null) {
+            end = start || 0
+            start = 0
+        }
+        var index = -1,
+            length = Math.max(0, Math.ceil((end - start) / step)),
+            result = Array(length)
+        while (++index &lt; length) {
+            result[index] = start
+            start += step
+        }
+        return result
+    }
+</code></pre>
+
+<p>生成整数数组，例子如下</p>
+
+<pre><code>avalon.range(10)
+=&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+avalon.range(1, 11)
+=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+avalon.range(0, 30, 5)
+=&gt; [0, 5, 10, 15, 20, 25]
+avalon.range(0, -10, -1)
+=&gt; [0, -1, -2, -3, -4, -5, -6, -7, -8, -9]
+avalon.range(0)
+</code></pre>
+
+<h2>avalon.bind avalon.unbind方法</h2>
+
+<p>以后章节分析</p>
+
+<h2>avalon.css方法</h2>
+
+<p>以后章节分析</p>
+
+<h2>avalon.each方法</h2>
+
+<pre><code>each: function(obj, fn) {
+        if (obj) { //排除null, undefined
+            var i = 0
+            if (isArrayLike(obj)) {
+                for (var n = obj.length; i &lt; n; i++) {
+                    fn(i, obj[i])
+                }
+            } else {
+                for (i in obj) {
+                    if (obj.hasOwnProperty(i)) {
+                        fn(i, obj[i])
+                    }
+                }
+            }
+        }
+    }
+</code></pre>
+
+<p>与jquery的each使用方法一样，其中<code>isArrayLike</code>代码如下</p>
+
+<pre><code>//只让节点集合，纯数组，arguments与拥有非负整数的length属性的纯JS对象通过
+function isArrayLike(obj) {
+    if (obj &amp;&amp; typeof obj === "object" &amp;&amp; !avalon.isWindow(obj)) {
+        var n = obj.length
+        if (+n === n &amp;&amp; !(n % 1) &amp;&amp; n &gt;= 0) { //检测length属性是否为非负整数
+            try {
+                if ({}.propertyIsEnumerable.call(obj, "length") === false) { //如果是原生对象
+                    return Array.isArray(obj) || /^\s?function/.test(obj.item || obj.callee)
+                }
+                return true
+            } catch (e) { //IE的NodeList直接抛错
+                return true
+            }
+        }
+    }
+    return false
+}
+</code></pre>
+
+<p>里面主要要注意是<code>{}.propertyIsEnumerable.call(obj, "length") === false</code>，是用来判断是否元素的对象，不用hasOwnProperty是因为</p>
+
+<pre><code>var a = [];
+console.log(a.hasOwnProperty('length'));       // "true"
+console.log(a.propertyIsEnumerable('length')); // "false"
+</code></pre>
+
+<h2>avalon.getWidgetData方法</h2>
+
+<p>以后章节分析</p>
+
+<h2>avalon.Array 方法</h2>
+
+<pre><code>Array: {
+        ensure: function(target, item) {
+            //只有当前数组不存在此元素时只添加它
+            if (target.indexOf(item) === -1) {
+                target.push(item)
+            }
+            return target
+        },
+        removeAt: function(target, index) {
+            //移除数组中指定位置的元素，返回布尔表示成功与否。
+            return !!target.splice(index, 1).length
+        },
+        remove: function(target, item) {
+            //移除数组中第一个匹配传参的那个元素，返回布尔表示成功与否。
+            var index = target.indexOf(item)
+            if (~index)
+                return avalon.Array.removeAt(target, index)
+            return false
+        }
+    }
+</code></pre>
+
+<p>这里看注释就能看懂了，要留意的地方就是<code>~index</code>，意思是对<code>index</code>取反，</p>
+
+<pre><code>~-1 =&gt; 0
+</code></pre>
+
+<h2>avalon.nextTick方法</h2>
+
+<pre><code>avalon.nextTick = window.setImmediate ? setImmediate.bind(window) : function(callback) {
+    setTimeout(callback, 0) 
+}
+</code></pre>
+
+<p>在IE10,11下提供了<code>setImmediate</code>方法，其方法能在UI空闲时立刻执行，使用<code>setTimeout</code>虽然也能达到相同目的，
+但是<code>setTimeout</code>在不同浏览器下延迟时间不一，同时也比<code>setImmediate</code>要慢，所以优先使用<code>setImmediate</code>方法</p>
+
+<blockquote><p><code>setImmediate</code>，<code>setTimeout</code>，<code>setInterval</code>与线程的关系可看此文章<a href="http://www.iamued.com/qianduan/1645.html">javascript线程解释（setTimeout,setInterval你不知道的事）</a></p></blockquote>
 
 
         <!--div id="disqus_container">
