@@ -4,13 +4,33 @@
    <title>vincentlws.github.io</title>
    <link href="http://vincentlws.github.io/atom.xml" rel="self" type="application/atom+xml"/>
    <link href="http://vincentlws.github.io" rel="alternate" type="text/html" />
-   <updated>2014-05-14T17:59:55+08:00</updated>
+   <updated>2014-05-15T09:45:57+08:00</updated>
    <id>http://vincentlws.github.io</id>
    <author>
      <name></name>
      <email></email>
    </author>
 
+   
+   <entry>
+     <title>Avalon如何构造model</title>
+     <link href="http://vincentlws.github.io/avalon-analyse-3"/>
+     <updated>2014-05-15T00:00:00+08:00</updated>
+     <id>http://beiyuu.com/avalon-analyse-3</id>
+     <content type="html">&lt;h2&gt;创建jQuery式的无new 实例化结构&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;avalon = function(el) { //创建jQuery式的无new 实例化结构
+    return new avalon.init(el)
+}
+
+avalon.init = function(el) {
+    this[0] = this.element = el
+}
+
+avalon.fn = avalon.prototype = avalon.init.prototype
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+   </entry>
    
    <entry>
      <title>Avalon基本工具函数</title>
@@ -374,11 +394,15 @@ console.log(a.propertyIsEnumerable(&#39;length&#39;)); // &quot;false&quot;
 但是&lt;code&gt;setTimeout&lt;/code&gt;在不同浏览器下延迟时间不一，同时也比&lt;code&gt;setImmediate&lt;/code&gt;要慢，所以优先使用&lt;code&gt;setImmediate&lt;/code&gt;方法&lt;/p&gt;
 
 &lt;blockquote&gt;&lt;p&gt;&lt;code&gt;setImmediate&lt;/code&gt;，&lt;code&gt;setTimeout&lt;/code&gt;，&lt;code&gt;setInterval&lt;/code&gt;与线程的关系可看此文章&lt;a href=&quot;http://www.iamued.com/qianduan/1645.html&quot;&gt;javascript线程解释（setTimeout,setInterval你不知道的事）&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;结尾&lt;/h2&gt;
+
+&lt;p&gt;以上就是Avalon中的基本工具函数，主要关注了函数的简单实现方法与需要关注的地方，下一章预告&lt;a href=&quot;/avalon-analyse-3&quot;&gt;Avalon如何构造model&lt;/a&gt;&lt;/p&gt;
 </content>
    </entry>
    
    <entry>
-     <title>avalon源码分析</title>
+     <title>avalon源码分析目录</title>
      <link href="http://vincentlws.github.io/avalon-analyse-1"/>
      <updated>2014-05-13T00:00:00+08:00</updated>
      <id>http://beiyuu.com/avalon-analyse-1</id>
@@ -386,14 +410,13 @@ console.log(a.propertyIsEnumerable(&#39;length&#39;)); // &quot;false&quot;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;/avalon-analyse-2&quot;&gt;Avalon基本工具函数&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-3&quot;&gt;Avalon如何生成model&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-4&quot;&gt;Avalon修复defineProperties的支持&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-5&quot;&gt;Amd的配置模块&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-6&quot;&gt;Avalon对dom方法的一些封装&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-7&quot;&gt;Avalon解析html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-8&quot;&gt;Avalon的观察者模式&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-9&quot;&gt;Avalon的依赖收集与触发&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/avalon-analyse-10&quot;&gt;Avalon的扫描系统&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-3&quot;&gt;Avalon如何构造model&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-4&quot;&gt;amd的配置模块&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-5&quot;&gt;Avalon对dom方法的一些封装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-6&quot;&gt;Avalon解析html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-7&quot;&gt;Avalon的观察者模式&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-8&quot;&gt;Avalon的依赖收集与触发&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/avalon-analyse-9&quot;&gt;Avalon的扫描系统&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 

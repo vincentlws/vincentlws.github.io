@@ -322,6 +322,7 @@ description: Avalon基本工具函数
     
     ~-1 => 0
 
+
 ##avalon.nextTick方法
     
     avalon.nextTick = window.setImmediate ? setImmediate.bind(window) : function(callback) {
@@ -331,3 +332,6 @@ description: Avalon基本工具函数
 在IE10,11下提供了`setImmediate`方法，其方法能在UI空闲时立刻执行，使用`setTimeout`虽然也能达到相同目的，
 但是`setTimeout`在不同浏览器下延迟时间不一，同时也比`setImmediate`要慢，所以优先使用`setImmediate`方法
 > `setImmediate`，`setTimeout`，`setInterval`与线程的关系可看此文章[javascript线程解释（setTimeout,setInterval你不知道的事）](http://www.iamued.com/qianduan/1645.html)
+
+##结尾
+以上就是Avalon中的基本工具函数，主要关注了函数的简单实现方法与需要关注的地方，下一章预告[Avalon如何构造model](/avalon-analyse-3)

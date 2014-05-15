@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      avalon源码分析
+title:      avalon源码分析目录
 category: avalonanalyse
 description: avalon源码分析目录
 ---
@@ -8,14 +8,13 @@ description: avalon源码分析目录
 ##avalon源码分析目录
 
 * [Avalon基本工具函数][1]
-* [Avalon如何生成model][2]
-* [Avalon修复defineProperties的支持][3]
-* [Amd的配置模块][4]
-* [Avalon对dom方法的一些封装][5]
-* [Avalon解析html][6]
-* [Avalon的观察者模式][7]
-* [Avalon的依赖收集与触发][8]
-* [Avalon的扫描系统][9]
+* [Avalon如何构造model][2]
+* [amd的配置模块][3]
+* [Avalon对dom方法的一些封装][4]
+* [Avalon解析html][5]
+* [Avalon的观察者模式][6]
+* [Avalon的依赖收集与触发][7]
+* [Avalon的扫描系统][8]
 
 。。。
 
