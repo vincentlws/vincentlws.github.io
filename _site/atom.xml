@@ -4,7 +4,7 @@
    <title>vincentlws.github.io</title>
    <link href="http://vincentlws.github.io/atom.xml" rel="self" type="application/atom+xml"/>
    <link href="http://vincentlws.github.io" rel="alternate" type="text/html" />
-   <updated>2014-05-22T09:33:18+08:00</updated>
+   <updated>2014-05-22T20:10:00+08:00</updated>
    <id>http://vincentlws.github.io</id>
    <author>
      <name></name>
@@ -15,29 +15,136 @@
    <entry>
      <title>Avalon如何构造model</title>
      <link href="http://vincentlws.github.io/avalon-analyse-3"/>
-     <updated>2014-05-15T00:00:00+08:00</updated>
+     <updated>2014-05-22T00:00:00+08:00</updated>
      <id>http://beiyuu.com/avalon-analyse-3</id>
-     <content type="html">&lt;h2&gt;创建jQuery式的无new 实例化结构&lt;/h2&gt;
+     <content type="html">&lt;h2&gt;认识defineProperty&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;avalon = function(el) { //创建jQuery式的无new 实例化结构
-    return new avalon.init(el)
-}
-
-avalon.init = function(el) {
-    this[0] = this.element = el
-}
-
-avalon.fn = avalon.prototype = avalon.init.prototype
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;请先去&lt;a href=&quot;/Object.defineProperty&quot;&gt;认识defineProperty&lt;/a&gt;，了解一下认识defineProperty的作用&lt;/p&gt;
 </content>
    </entry>
    
    <entry>
-     <title>Avalon如何构造model</title>
-     <link href="http://vincentlws.github.io/avalon-analyse-3"/>
-     <updated>2014-05-13T00:00:00+08:00</updated>
-     <id>http://beiyuu.com/avalon-analyse-3</id>
-     <content type="html">&lt;h1&gt;#&lt;/h1&gt;
+     <title>认识defineProperty</title>
+     <link href="http://vincentlws.github.io/Object.defineProperty"/>
+     <updated>2014-05-22T00:00:00+08:00</updated>
+     <id>http://beiyuu.com/Object.defineProperty</id>
+     <content type="html">&lt;h2&gt;概要&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Object.defineProperty&lt;/code&gt;是ECMAScript 262v5中的新函数，可以直接在一个对象上定义一个新属性，或者修改一个已经存在的属性， 并且返回这个对象&lt;/p&gt;
+
+&lt;h3&gt;语法&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Object.defineProperty(obj, prop, descriptor)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;参数&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;obj&lt;/code&gt;：需要定义属性的对象。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;prop&lt;/code&gt;：需被定义或修改的属性名。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;descriptor&lt;/code&gt;：需被定义或修改的属性描述符。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;descriptor可选键值&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;configurable&lt;/code&gt;：如果为false时，则不能对属性进行descriptor可选键值的修改。默认为 false。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;enumerable&lt;/code&gt;：true 当前属性可以被枚举出来。默认为 false。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;value&lt;/code&gt;：属性的值。默认为 undefined。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;writable&lt;/code&gt;：如果为true 则表示可修改属性值。默认为 false。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;get&lt;/code&gt;：一个给属性提供 getter 的方法，如果没有 getter 则为 undefined。方法将返回用作属性的值。默认为 undefined。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;set&lt;/code&gt;：一个给属性提供 setter 的方法，如果没有 setter 则为 undefined。该方法将收到作为唯一参数的新值分配给属性。默认为 undefined。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;各属性例子&lt;/h2&gt;
+
+&lt;h3&gt;Writable 属性&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {};
+Object.defineProperty(person, &#39;name&#39;, {value: &#39;vincent&#39;, writable: false});
+
+console.log(person.name); //vincent
+person.name = &#39;lws&#39;; //如果在严格模式&#39;use strict&#39;下会报错
+console.log(person.name); //vincent
+
+//writable设置为true 
+Object.defineProperty(person, &#39;age&#39;, {value: 25, writable: true});
+
+console.log(person.age); //25
+person.age = 30; 
+console.log(person.age); //30  age修改成功
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Enumerable 属性&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {};
+Object.defineProperty(person, &#39;name&#39;, {value: &#39;vincent&#39;, enumerable: false});
+Object.defineProperty(person, &#39;age&#39;, {value: 25, enumerable: true});
+
+console.log(person.propertyIsEnumerable(&#39;name&#39;)); //false
+console.log(person.propertyIsEnumerable(&#39;age&#39;)); //false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Configurable 属性&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {};
+Object.defineProperty(person, &#39;name&#39;, {get: function(){return 1;}, configurable : false});
+
+Object.defineProperty(person, &#39;name&#39;, {value: &#39;vincent&#39;}); // 报错
+Object.defineProperty(person, &#39;name&#39;, {configurable: true}); // 报错
+Object.defineProperty(person, &#39;name&#39;, {enumerable: true}); // 报错
+Object.defineProperty(person, &#39;name&#39;, {set: function(){}}); // 报错
+Object.defineProperty(person, &#39;name&#39;, {get: function(){return 1;}}); //报错   
+Object.defineProperty(person, &#39;name&#39;, {writable:true});
+
+console.log(o.name); // logs 1
+delete o.name;
+console.log(o.name); // logs 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;set/get 属性&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {},
+    name = &#39;vincent&#39;
+
+Object.defineProperty(person, &#39;name&#39;, {
+    set: function(s){
+        console.log(&#39;写入属性&#39;)
+        name = s;
+    },
+    get: function(){
+        console.log(&#39;读取属性&#39;)
+        return name;
+    }
+});
+
+person.name = &#39;vincent&#39;; //写入属性
+
+console.log(person.name); //读取属性
+                          //vincent
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;getOwnPropertyDescriptor函数&lt;/h2&gt;
+
+&lt;p&gt;使用此函数可以查看对象某属性的&lt;code&gt;descriptor&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {name: &#39;vincent&#39;};
+console.log(JSON.stringify(Object.getOwnPropertyDescriptor(person, &#39;name&#39;))); 
+//{&quot;value&quot;:&quot;vincent&quot;,&quot;writable&quot;:true,&quot;enumerable&quot;:true,&quot;configurable&quot;:true} 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;pre&gt;&lt;code&gt;var person = {};
+Object.defineProperty(person, &#39;name&#39;, {enumerable: true});
+console.log(JSON.stringify(Object.getOwnPropertyDescriptor(person, &#39;name&#39;)));
+//{&quot;writable&quot;:false,&quot;enumerable&quot;:true,&quot;configurable&quot;:false} 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;资料参考:
+&lt;a href=&quot;https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty&quot;&gt;JavaScript | MDN&lt;/a&gt;&lt;/p&gt;
 </content>
    </entry>
    
