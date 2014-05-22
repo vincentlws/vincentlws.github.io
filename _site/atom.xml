@@ -4,7 +4,7 @@
    <title>vincentlws.github.io</title>
    <link href="http://vincentlws.github.io/atom.xml" rel="self" type="application/atom+xml"/>
    <link href="http://vincentlws.github.io" rel="alternate" type="text/html" />
-   <updated>2014-05-15T09:45:57+08:00</updated>
+   <updated>2014-05-21T21:01:18+08:00</updated>
    <id>http://vincentlws.github.io</id>
    <author>
      <name></name>
@@ -29,6 +29,15 @@ avalon.init = function(el) {
 
 avalon.fn = avalon.prototype = avalon.init.prototype
 &lt;/code&gt;&lt;/pre&gt;
+</content>
+   </entry>
+   
+   <entry>
+     <title>Avalon如何构造model</title>
+     <link href="http://vincentlws.github.io/avalon-analyse-3"/>
+     <updated>2014-05-13T00:00:00+08:00</updated>
+     <id>http://beiyuu.com/avalon-analyse-3</id>
+     <content type="html">&lt;h1&gt;#&lt;/h1&gt;
 </content>
    </entry>
    
@@ -62,6 +71,8 @@ avalon.fn = avalon.prototype = avalon.init.prototype
 &lt;pre&gt;&lt;code&gt;var el = new avalon(&#39;id&#39;); //new生成实例
 var el = avalon(&#39;id&#39;); //直接返回实例
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
 
 &lt;h2&gt;avalon.type类型判断&lt;/h2&gt;
 

@@ -30,6 +30,8 @@ description: Avalon基本工具函数
     var el = new avalon('id'); //new生成实例
     var el = avalon('id'); //直接返回实例
 
+------------------------------------------------------------------------------------
+
 ##avalon.type类型判断
 
     function getType(obj) { //取得类型
